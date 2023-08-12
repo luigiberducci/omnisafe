@@ -21,7 +21,7 @@ if __name__ == '__main__':
     env_id = 'SafetyPointGoal1-v0'
     custom_cfgs = {
         'train_cfgs': {
-            'total_steps': 1024000,
+            'total_steps': 250000,
             'vector_env_nums': 1,
             'parallel': 1,
         },
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         },
     }
 
-    agent = omnisafe.Agent('PPOLag', env_id, custom_cfgs=custom_cfgs)
+    agent = omnisafe.Agent('PPOPID', env_id, custom_cfgs=custom_cfgs)
     agent.learn()
 
     agent.plot(smooth=1)
