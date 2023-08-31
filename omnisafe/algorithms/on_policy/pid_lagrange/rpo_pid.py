@@ -17,19 +17,19 @@
 import torch
 
 from omnisafe.algorithms import registry
-from omnisafe.algorithms.on_policy.base.ppo import PPO
+from omnisafe.algorithms.on_policy.base.rpo import RPO
 from omnisafe.common.pid_lagrange import PIDLagrangian
 
 
 @registry.register
-class PPOPID(PPO):
-    """The PID-Lagrange version of the PPO algorithm.
+class RPOPID(RPO):
+    """The PID-Lagrange version of the RPO algorithm.
 
-    A simple combination of the PID-Lagrange method and the Proximal Policy Optimization algorithm.
+    A simple combination of the PID-Lagrange method and the Robust Policy Optimization algorithm.
     """
 
     def _init(self) -> None:
-        """Initialize the PPOPID specific model.
+        """Initialize the RPOPID specific model.
 
         The PPOPID algorithm uses a PID-Lagrange multiplier to balance the cost and reward.
         """
@@ -37,7 +37,7 @@ class PPOPID(PPO):
         self._lagrange: PIDLagrangian = PIDLagrangian(**self._cfgs.lagrange_cfgs)
 
     def _init_log(self) -> None:
-        """Log the PPOPID specific information.
+        """Log the RPOPID specific information.
 
         +----------------------------+------------------------------+
         | Things to log              | Description                  |
@@ -76,11 +76,12 @@ class PPOPID(PPO):
         super()._update()
 
         self._logger.store({'Metrics/LagrangeMultiplier': self._lagrange.lagrangian_multiplier})
+        self._logger.store({'Train/RPOAlpha': self._rpo_alpha})
 
     def _compute_adv_surrogate(self, adv_r: torch.Tensor, adv_c: torch.Tensor) -> torch.Tensor:
         r"""Compute surrogate loss.
 
-        PPOPID uses the following surrogate loss:
+        RPOPID uses the following surrogate loss:
 
         .. math::
 

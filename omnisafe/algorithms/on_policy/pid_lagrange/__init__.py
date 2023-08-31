@@ -17,10 +17,12 @@
 from omnisafe.algorithms.on_policy.pid_lagrange.cppo_pid import CPPOPID
 from omnisafe.algorithms.on_policy.pid_lagrange.trpo_pid import TRPOPID
 from omnisafe.algorithms.on_policy.pid_lagrange.ppo_pid import PPOPID
+from omnisafe.algorithms.on_policy.pid_lagrange.rpo_pid import RPOPID
 
 
 __all__ = [
     'CPPOPID',
     'TRPOPID',
     'PPOPID',
+    'RPOPID',
 ]

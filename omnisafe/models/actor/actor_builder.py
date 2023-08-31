@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 from omnisafe.models.actor.gaussian_learning_actor import GaussianLearningActor
+from omnisafe.models.actor.gaussian_robust_learning_actor import RobustGaussianLearningActor
 from omnisafe.models.actor.gaussian_sac_actor import GaussianSACActor
 from omnisafe.models.actor.mlp_actor import MLPActor
 from omnisafe.models.actor.perturbation_actor import PerturbationActor
@@ -56,7 +57,7 @@ class ActorBuilder:
     def build_actor(
         self,
         actor_type: ActorType,
-    ) -> GaussianLearningActor | GaussianSACActor | MLPActor | VAE | PerturbationActor:
+    ) -> GaussianLearningActor | RobustGaussianLearningActor | GaussianSACActor | MLPActor | VAE | PerturbationActor:
         """Build actor network.
 
         Currently, we support the following actor types:
@@ -75,6 +76,14 @@ class ActorBuilder:
         """
         if actor_type == 'gaussian_learning':
             return GaussianLearningActor(
+                self._obs_space,
+                self._act_space,
+                self._hidden_sizes,
+                activation=self._activation,
+                weight_initialization_mode=self._weight_initialization_mode,
+            )
+        if actor_type == 'robust_gaussian_learning':
+            return RobustGaussianLearningActor(
                 self._obs_space,
                 self._act_space,
                 self._hidden_sizes,
@@ -115,5 +124,5 @@ class ActorBuilder:
             )
         raise NotImplementedError(
             f'Actor type {actor_type} is not implemented! '
-            f'Available actor types are: gaussian_learning, gaussian_sac, mlp, vae, perturbation.',
+            f'Available actor types are: gaussian_learning, robust_gaussian_learning, gaussian_sac, mlp, vae, perturbation.',
         )

@@ -16,12 +16,22 @@
 
 import omnisafe
 
-
 if __name__ == '__main__':
-    env_id = 'SafetyPointGoal1-v0'
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--env-id', type=str, default='SafetyPointGoal1-v0')
+    parser.add_argument('--algo', type=str, default='PPOPID')
+    parser.add_argument('--total-steps', type=int, default=10000)
+    args = parser.parse_args()
+
+    env_id = args.env_id
+    algo = args.algo
+    total_steps = args.total_steps
+
     custom_cfgs = {
         'train_cfgs': {
-            'total_steps': 250000,
+            'total_steps': total_steps,
             'vector_env_nums': 1,
             'parallel': 1,
         },
@@ -31,10 +41,12 @@ if __name__ == '__main__':
         },
         'logger_cfgs': {
             'use_wandb': False,
-        },
+            'log_dir': f'./runs/',
+        }
     }
 
-    agent = omnisafe.Agent('PPOPID', env_id, custom_cfgs=custom_cfgs)
+    print(f"Start training for {total_steps} steps.")
+    agent = omnisafe.Agent(algo, env_id, custom_cfgs=custom_cfgs)
     agent.learn()
 
     agent.plot(smooth=1)
